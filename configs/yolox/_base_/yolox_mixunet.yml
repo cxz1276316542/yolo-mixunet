@@ -1,0 +1,47 @@
+architecture: YOLOXMixUnet
+norm_type: sync_bn
+use_ema: False
+ema_decay: 0.9999
+ema_decay_type: "exponential"
+act: silu
+find_unused_parameters: True
+
+depth_mult: 1.0
+width_mult: 1.0
+MixUnet:
+  pretrained: null
+  img_size: 640
+  embed_dim: 48
+  depths: [1, 2, 6, 6]
+  num_heads: [3, 6, 12, 24]
+  drop_path_rate: 0.
+  window_size: 7
+  dwconv_kernel_size: 3
+  mlp_ratio: 4.
+  frozen_stages: -1
+  drop_rate: 0.
+
+YOLOXMixUnet:
+  backbone: MixUnet
+  neck: YOLOMixUnetCSPPAN
+  head: YOLOXMixUnetHead
+
+YOLOMixUnetCSPPAN:
+  depthwise: False
+
+YOLOXMixUnetHead:
+  l1_epoch: 285
+  depthwise: False
+  loss_weight: {cls: 2.0, obj: 1.0, iou: 5.0, l1: 1.0}
+  assigner:
+    name: SimOTAAssigner
+    candidate_topk: 10
+    use_vfl: False
+  nms:
+    name: MultiClassNMS
+    nms_top_k: 1000
+    keep_top_k: 100
+    score_threshold: 0.001
+    nms_threshold: 0.65
+    # For speed while keep high mAP, you can modify 'nms_top_k' to 1000 and 'keep_top_k' to 100, the mAP will drop about 0.1%.
+    # For high speed demo, you can modify 'score_threshold' to 0.25 and 'nms_threshold' to 0.45, but the mAP will drop a lot.

@@ -1,0 +1,21 @@
+metric: VOC
+map_type: integral
+num_classes: 2
+
+TrainDataset:
+  !VOCDataSet
+    dataset_dir: dataset/VOC2007_3.05
+    anno_path: train.txt
+    label_list: label_list.txt
+    data_fields: ['image', 'gt_bbox', 'gt_class', 'difficult']
+
+EvalDataset:
+  !VOCDataSet
+    dataset_dir: dataset/VOC2007_3.05
+    anno_path: val.txt
+    label_list: label_list.txt
+    data_fields: ['image', 'gt_bbox', 'gt_class', 'difficult']
+
+TestDataset:
+  !ImageFolder
+    anno_path: dataset/VOC2007_3.05/label_list.txt

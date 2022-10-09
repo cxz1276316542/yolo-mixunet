@@ -1,0 +1,37 @@
+architecture: YOLOv3
+pretrain_weights:
+norm_type: sync_bn
+
+YOLOv3:
+  backbone: MixUnet
+  neck: YOLOv3MixUnetFPN
+  yolo_head: YOLOv3Head
+  post_process: BBoxPostProcess
+
+
+
+# use default config
+# YOLOv3FPN:
+
+YOLOv3Head:
+  anchors: [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45], [59, 119], [116, 90], [156, 198], [200, 300], [300, 350], [350, 370],[373, 326]]
+  anchor_masks: [[9, 10, 11][6, 7, 8], [3, 4, 5], [0, 1, 2]]
+  loss: YOLOv3Loss
+
+YOLOv3Loss:
+  ignore_thresh: 0.7
+  downsample: [32, 16, 8, 4]
+  label_smooth: false
+
+BBoxPostProcess:
+  decode:
+    name: YOLOBox
+    conf_thresh: 0.005
+    downsample_ratio: 32
+    clip_bbox: true
+  nms:
+    name: MultiClassNMS
+    keep_top_k: 100
+    score_threshold: 0.01
+    nms_threshold: 0.45
+    nms_top_k: 1000

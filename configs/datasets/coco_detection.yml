@@ -1,0 +1,20 @@
+metric: COCO
+num_classes: 2
+
+TrainDataset:
+  !COCODataSet
+    image_dir: train
+    anno_path: voc_train.json
+    dataset_dir: dataset/jzxcoco
+    data_fields: ['image', 'gt_bbox', 'gt_class', 'is_crowd']
+
+EvalDataset:
+  !COCODataSet
+    image_dir: val
+    anno_path: voc_val.json
+    dataset_dir: dataset/jzxcoco
+
+TestDataset:
+  !ImageFolder
+    anno_path: voc_val.json # also support txt (like VOC's label_list.txt)
+    dataset_dir: dataset/jzxcoco # if set, anno_path will be 'dataset_dir/anno_path'

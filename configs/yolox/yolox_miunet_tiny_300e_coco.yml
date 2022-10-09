@@ -1,0 +1,12 @@
+_BASE_: [
+  'yolox_tiny_300e_coco_mixunet.yml'
+]
+depth_mult: 0.67
+width_mult: 0.75
+
+log_iter: 100
+snapshot_epoch: 5
+weights: output/yolox_mixunet_tiny_300e_coco/model_final
+
+
+
